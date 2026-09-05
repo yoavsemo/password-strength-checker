@@ -1,6 +1,7 @@
 from getpass import getpass
 from enum import Enum
 
+usernameInput = False
 
 class PasswordStrength(Enum):
     WEAK = 1
@@ -51,6 +52,8 @@ def check_password(password, username):
                 has_consecutive_numbers = True
                 break
 
+
+
     # Return all the results in one dictionary
     return {
         "has_min_length": has_min_length,
@@ -63,10 +66,20 @@ def check_password(password, username):
         "has_consecutive_numbers": has_consecutive_numbers,
     }
 
+def basicRequirement(checks):
+    return (
+        checks["has_min_length"]
+        and checks["has_uppercase"]
+        and checks["has_lowercase"]
+        and checks["has_digit"]
+    )
+
 
 def rank_password(checks):
     score = 0
 
+    if checks["has_min_length"] and checks["has_uppercase"] and checks["has_lowercase"] and checks["has_digit"] and checks["has_special_char"]:
+        basicRequirement = True
     if checks["has_min_length"]:
         score += 1
     if checks["has_uppercase"]:
@@ -84,22 +97,31 @@ def rank_password(checks):
     if not checks["has_consecutive_numbers"]:
         score += 1
 
-    if score < 4:
-        return PasswordStrength.WEAK
-    elif score <= 6:
-        return PasswordStrength.MODERATE
-    else:
-        return PasswordStrength.STRONG
+        if score < 4:
+            return PasswordStrength.WEAK 
+        elif score >= 4 and score <= 7:
+            return PasswordStrength.MODERATE 
+        else:
+            return PasswordStrength.STRONG 
+
+      
 
 
 def main():
-            username = input("Enter your username: ")
-            password = getpass("Enter your password: ")
+            
+    username = input("Enter your username: ")
 
-            checks = check_password(password, username)
-            strength = rank_password(checks)
+    password = getpass("Enter your password: ")
 
+    checks = check_password(password, username)
+    strength = rank_password(checks)
+
+    if not basicRequirement(checks):
+            print("Your password does not meet the basic requirements. Please try again.")
+            main()
+            
             print(f"Password strength: {strength.name}")
+            
 
 
 main()
