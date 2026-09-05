@@ -14,6 +14,8 @@ The program checks whether a password:
 
 It then classifies the password as weak, moderate, or strong.
 
+The password must have at least eight characters, uppercase and lowercase letters and a number otherwise the program will ask the user the try again.
+
 ## How to Run
 
 1. Install Python 3.
